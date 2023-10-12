@@ -10,7 +10,7 @@ resource "azuredevops_project" "project" {
   features = {
     "boards"       = "disabled"
     "repositories" = "enabled"
-    "pipelines"    = "disabled"
+    "pipelines"    = "enabled"
     "testplans"    = "disabled"
     "artifacts"    = "disabled"
   }

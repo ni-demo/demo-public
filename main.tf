@@ -27,3 +27,14 @@ module "demo_repository" {
   project_id      = module.demo_project.id
   repository_name = "demo-repository"
 }
+
+module "demo_agent" {
+  source = "./modules/agent"
+
+  agent_count     = 1
+  ami_name_filter = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server*"
+  azdo_org        = var.azdo_org
+  azdo_pat        = var.azdo_pat
+  pool_name       = "demo"
+  project_id      = module.demo_project.id
+}
