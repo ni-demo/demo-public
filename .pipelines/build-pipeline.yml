@@ -1,0 +1,25 @@
+trigger: none
+
+pool: ${pool_name}
+
+variables:
+  ProjectName: ${project_name}
+  FeedName: ${feed_name}
+  PackageFolder: #add the package folder's name here
+
+steps:
+- script: |
+    pip install build twine
+  displayName: Install dependencies
+- script: |
+    python3 -m build --wheel
+  workingDirectory: $(PackageFolder)
+  displayName: Build package
+- task: TwineAuthenticate@1
+  inputs:
+    artifactFeed: $(ProjectName)/$(FeedName)
+  displayName: Authenticate feed    
+- script: |
+    python3 -m twine upload --repository $(FeedName) --config-file $(PYPIRC_PATH) dist/*.whl
+  workingDirectory: $(PackageFolder)
+  displayName: Upload package

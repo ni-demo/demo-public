@@ -47,3 +47,36 @@ module "demo_feed" {
   project_name = module.demo_project.name
   feed_name    = "python-demo"
 }
+
+module "build_pipeline" {
+  source = "./modules/pipeline"
+
+  branch         = module.demo_repository.default_branch
+  commit_message = "Creating build-pipeline.yml"
+  pipeline_name  = "build-pipeline"
+  project_id     = module.demo_project.id
+  repository_id  = module.demo_repository.repository_id
+  template_variables = {
+    pool_name    = module.demo_agent.pool_name
+    project_name = module.demo_project.name
+    feed_name    = module.demo_feed.name
+  }
+  yml_path = ".pipelines/build-pipeline.yml"
+}
+
+module "test_pipeline" {
+  source     = "./modules/pipeline"
+  depends_on = [module.build_pipeline]
+
+  branch         = module.demo_repository.default_branch
+  commit_message = "Creating test-pipeline.yml"
+  pipeline_name  = "test-pipeline"
+  project_id     = module.demo_project.id
+  repository_id  = module.demo_repository.repository_id
+  template_variables = {
+    pool_name    = module.demo_agent.pool_name
+    project_name = module.demo_project.name
+    feed_name    = module.demo_feed.name
+  }
+  yml_path = ".pipelines/test-pipeline.yml"
+}

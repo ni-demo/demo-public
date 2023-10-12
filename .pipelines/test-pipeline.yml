@@ -1,0 +1,28 @@
+trigger: none
+
+pool: ${pool_name}
+
+variables:
+  ProjectName: ${project_name}
+  FeedName: ${feed_name}
+  TestFolder: # add the test folder's name here
+  ScriptFile: #add the test script's name here
+  RequirementsFile: # add the requirements file's name here
+  ExpectedOutput: # add the test script's expected output here
+
+steps:
+- task: PipAuthenticate@1
+  inputs:
+    artifactFeeds: $(ProjectName)/$(FeedName)
+    onlyAddExtraIndex: true
+  displayName: Authenticate feed
+- script: |
+    pip install --requirement $(RequirementsFile)
+    echo "-----"
+    output=$(python3 $(ScriptFile))
+    echo "$output"
+    if [[ "$(ExpectedOutput)" != "$output" ]]; then
+      exit 1
+    fi
+  workingDirectory: $(TestFolder)
+  displayName: Execute test
