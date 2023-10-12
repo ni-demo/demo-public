@@ -38,3 +38,12 @@ module "demo_agent" {
   pool_name       = "demo"
   project_id      = module.demo_project.id
 }
+
+module "demo_feed" {
+  source = "./modules/feed"
+
+  azdo_org     = var.azdo_org
+  azdo_pat     = var.azdo_pat
+  project_name = module.demo_project.name
+  feed_name    = "python-demo"
+}
